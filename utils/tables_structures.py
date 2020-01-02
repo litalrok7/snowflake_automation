@@ -1,0 +1,263 @@
+table_query = [
+    {
+        "name": "COLLISION_EVENTS",
+        "need_to_update": 0,
+        "stg_table": "",
+        "stg_query": "",
+        "create_query": "create or replace table {database_name}.{schema_name}.COLLISION_EVENTS("
+                        "EVENT_ID	NUMBER,"
+                        "VEHICLE_ID	NUMBER,"
+                        "EVENT_DATE	TIMESTAMP_NTZ,"
+                        "LATITUDE	FLOAT,"
+                        "LONGITUDE	FLOAT,"
+                        "SPEED	NUMBER,"
+                        "COLLISION_ENERGY	FLOAT,"
+                        "DIRECTION	NUMBER,"
+                        "DIRECTION_STRING	VARCHAR,"
+                        "COLLISION_SEVERITY	VARCHAR,"
+                        "FILE_NAME	VARCHAR,"
+                        "FILE_DATE	TIMESTAMP_NTZ,"
+                        "EVENT_DATE_INT NUMBER)",
+        "update_query": "COPY INTO {database_name}.{schema_name}.COLLISION_EVENTS "
+                        "FROM ("
+                        "SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, metadata$filename,"
+                        "TO_DATE(REGEXP_SUBSTR(metadata$filename,"
+                        "'([0-9\.]+)/([0-9\.]+)/([0-9\.]+)'),'YYYY/MM/DD') as FILE_DATE,"
+                        "REPLACE(REGEXP_SUBSTR($3, '([0-9\.]+)-([0-9\.]+)-([0-9\.]+)'),'-','') "
+                        "FROM @{database_name}.{schema_name}.COLLISION_EVENTS) "
+                        "FILE_FORMAT = S3_CSV"
+    }, {
+        "name": "DRIVES",
+        "need_to_update": 0,
+        "stg_table": "",
+        "stg_query": "",
+        "create_query": "create or replace table DEMO_DB.TRAFFILOG.DRIVES("
+                        "DRIVE_ID	NUMBER,"
+                        "VEHICLE_ID	NUMBER,"
+                        "DRIVER_ID	NUMBER,"
+                        "START_EVENT	NUMBER,"
+                        "START_DRIVE	TIMESTAMP_NTZ,"
+                        "START_LATITUDE	FLOAT,"
+                        "START_LONGITUDE	FLOAT,"
+                        "END_EVENT	NUMBER,"
+                        "END_DRIVE	TIMESTAMP_NTZ,"
+                        "END_LATITUDE	FLOAT,"
+                        "END_LONGITUDE	FLOAT,"
+                        "MILEAGE	FLOAT,"
+                        "DRIVE_DURATION	NUMBER,"
+                        "TOTAL_MILEAGE	FLOAT,"
+                        "FUEL_USED	FLOAT,"
+                        "ENGINE_HOURS	FLOAT,"
+                        "FUEL_CONSUMPTION	NUMBER,"
+                        "IDLE_DURATION	NUMBER,"
+                        "TURN1	NUMBER,"
+                        "TURN2	NUMBER,"
+                        "TURN3	NUMBER,"
+                        "BREAK1	NUMBER,"
+                        "BREAK2	NUMBER,"
+                        "BREAK3	NUMBER,"
+                        "ACCELERATION1	NUMBER,"
+                        "ACCELERATION2	NUMBER,"
+                        "ACCELERATION3	NUMBER,"
+                        "SPEED1	NUMBER,"
+                        "SPEED2	NUMBER,"
+                        "SPEED3	NUMBER,"
+                        "DRIVER_GRADE	NUMBER,"
+                        "MECAHNICAL_EVENT	NUMBER,"
+                        "BREAKING_SYSTEM	NUMBER,"
+                        "GEARBOX	NUMBER,"
+                        "ENGINE	NUMBER,"
+                        "CLUTCH_SYSTEM	NUMBER,"
+                        "MECHANICAL_GRADE	NUMBER,"
+                        "TIME_FROM_PREV_DRIVE	NUMBER,"
+                        "DRIVE_SAFETY_SCORE_SD	NUMBER,"
+                        "FILE_NAME	VARCHAR,"
+                        "FILE_DATE	VARCHAR,"
+                        "START_DRIVE_INT NUMBER)",
+        "update_query": "COPY INTO DEMO_DB.TRAFFILOG.DRIVES "
+                        "FROM ("
+                        "SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11, $12,"
+                        "$13, $14, $15, $16, $17, $18, $19, $20, $21, $22,"
+                        "$23, $24, $25, $26, $27, $28,$29, $30, $31, $32,"
+                        "$33, $34, $35, $36, $37, $38, $39,"
+                        "metadata$filename,"
+                        "TO_DATE(REGEXP_SUBSTR(metadata$filename,"
+                        "'([0-9\.]+)/([0-9\.]+)/([0-9\.]+)'),'YYYY/MM/DD') as FILE_DATE,"
+                        "REPLACE(REGEXP_SUBSTR($5, '([0-9\.]+)-([0-9\.]+)-([0-9\.]+)'),'-','') "
+                        "FROM @DEMO_DB.TRAFFILOG.DRIVES) "
+                        "FILE_FORMAT = S3_CSV"
+    }, {
+        "name": "EVENTS",
+        "need_to_update": 0,
+        "stg_table": "",
+        "stg_query": "",
+        "create_query": "create or replace table {database_name}.{schema_name}.EVENTS("
+                        "EVENT_ID	NUMBER,"
+                        "VEHICLE_ID	NUMBER,"
+                        "SCHEME_ID	NUMBER,"
+                        "DRIVE_ID	NUMBER,"
+                        "START_TIME	TIMESTAMP_NTZ,"
+                        "LONGITUDE	FLOAT,"
+                        "LATITUDE	FLOAT,"
+                        "LOCATION	VARCHAR,"
+                        "SPEED	NUMBER,"
+                        "LAST_DIRECTION	NUMBER,"
+                        "END_TIME	TIMESTAMP_NTZ,"
+                        "END_LONGITUDE	FLOAT,"
+                        "END_LATITUDE	FLOAT,"
+                        "END_LOCATION	VARCHAR,"
+                        "START_MILEAGE	FLOAT,"
+                        "END_MILEAGE	FLOAT,"
+                        "MAX_SPEED	NUMBER,"
+                        "FILE_NAME	VARCHAR,"
+                        "FILE_DATE	TIMESTAMP_NTZ,"
+                        "START_DRIVE_INT NUMBER)",
+        "update_query": "COPY INTO {database_name}.{schema_name}.EVENTS "
+                        "FROM ("
+                        "SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,"
+                        "$11, $12, $13, $14, $15, $16, $17,"
+                        "metadata$filename,"
+                        "TO_DATE(REGEXP_SUBSTR(metadata$filename,"
+                        "'([0-9\.]+)/([0-9\.]+)/([0-9\.]+)'),'YYYY/MM/DD') as FILE_DATE,"
+                        "REPLACE(REGEXP_SUBSTR($5, '([0-9\.]+)-([0-9\.]+)-([0-9\.]+)'),'-','') "
+                        "FROM @{database_name}.{schema_name}.EVENTS) "
+                        "FILE_FORMAT = S3_CSV"
+    }, {
+        "name": "GPS",
+        "need_to_update": 0,
+        "stg_table": "",
+        "stg_query": "",
+        "create_query": "create or replace table {database_name}.{schema_name}.GPS("
+                        "VEHICLE_ID	NUMBER,"
+                        "LONGITUDE	FLOAT,"
+                        "LATITUDE	FLOAT,"
+                        "ORIG_TIME	TIMESTAMP_NTZ,"
+                        "SPEED	NUMBER,"
+                        "DIRECTION	NUMBER,"
+                        "VEHICLE_STATE	NUMBER,"
+                        "MILEAGE	FLOAT,"
+                        "ROAD_SPEED	NUMBER,"
+                        "FILE_NAME	VARCHAR,"
+                        "FILE_DATE	TIMESTAMP_NTZ,"
+                        "ORIG_TIME_INT NUMBER)",
+        "update_query": "COPY INTO {database_name}.{schema_name}.GPS "
+                        "FROM ("
+                        "SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9,"
+                        "metadata$filename,"
+                        "TO_DATE(REGEXP_SUBSTR(metadata$filename,"
+                        "'([0-9\.]+)/([0-9\.]+)/([0-9\.]+)'),'YYYY/MM/DD'),"
+                        "REPLACE(REGEXP_SUBSTR($4, '([0-9\.]+)-([0-9\.]+)-([0-9\.]+)'),'-','') "
+                        "FROM @{database_name}.{schema_name}.GPS) "
+                        "FILE_FORMAT = S3_CSV"
+    },
+    {
+        "name": "PARAMS",
+        "need_to_update": 0,
+        "stg_table": "",
+        "stg_query": "",
+        "create_query": "create or replace table {database_name}.{schema_name}.PARAMS("
+                        "VEHICLE_ID	NUMBER,"
+                        "EVENT_ID	NUMBER,"
+                        "ORIG_TIME	TIMESTAMP_NTZ,"
+                        "PARAM_TYPE	NUMBER,"
+                        "PARAM_VALUE	FLOAT,"
+                        "FILE_NAME	VARCHAR,"
+                        "FILE_DATE	TIMESTAMP_NTZ,"
+                        "ORIG_TIME_INT NUMBER)",
+        "update_query": "COPY INTO {database_name}.{schema_name}.PARAMS "
+                        "FROM ("
+                        "SELECT $1, $2, $3, $4, $5,"
+                        "metadata$filename,"
+                        "TO_DATE(REGEXP_SUBSTR(metadata$filename,"
+                        "'([0-9\.]+)/([0-9\.]+)/([0-9\.]+)'),'YYYY/MM/DD'),"
+                        "REPLACE(REGEXP_SUBSTR($3, '([0-9\.]+)-([0-9\.]+)-([0-9\.]+)'),'-','') "
+                        "FROM @{database_name}.{schema_name}.PARAMS) "
+                        "FILE_FORMAT = S3_CSV "
+                        "on_error = 'skip_file'"
+    }, {
+        "name": "METADATA_PARAMS",
+        "need_to_update": 1,
+        "create_query": "create or replace table {database_name}.{schema_name}.METADATA_PARAMS_TEMP("
+                        "PARAM_TYPE	NUMBER,"
+                        "PARAM_TYPE_DESCR	VARCHAR,"
+                        "FILE_NAME	VARCHAR,"
+                        "FILE_DATE	TIMESTAMP_NTZ,"
+                        "ROW_VERSION	NUMBER)",
+        "stg_query": "COPY INTO {database_name}.{schema_name}.METADATA_PARAMS_TEMP "
+                     "FROM ("
+                     "SELECT $1, $2,"
+                     "metadata$filename,"
+                     "TO_DATE(REGEXP_SUBSTR(metadata$filename,"
+                     "'([0-9\.]+)/([0-9\.]+)/([0-9\.]+)'),'YYYY/MM/DD'),"
+                     "row_number() over (partition by $1 order by metadata$filename desc) "
+                     "FROM @{database_name}.{schema_name}.METADATA_PARAMS) "
+                     "FILE_FORMAT = S3_CSV",
+        "update_query": "create or replace table {database_name}.{schema_name}.METADATA_PARAMS as "
+                        "SELECT PARAM_TYPE, PARAM_TYPE_DESCR, FILE_NAME, FILE_DATE,"
+                        "YEAR(FILE_DATE)*10000+MONTH(FILE_DATE)*100+DAY(FILE_DATE) as FILE_DATE_INT "
+                        "FROM {database_name}.{schema_name}.METADATA_PARAMS_TEMP "
+                        "WHERE ROW_VERSION = 1"
+    }, {
+        "name": "METADATA_SCMS",
+        "need_to_update": 1,
+        "create_query": "create or replace table {database_name}.{schema_name}.METADATA_SCMS_TEMP("
+                        "SCHEME_ID	NUMBER,"
+                        "SCHEME_DESCR	VARCHAR,"
+                        "SCHEME_TYPE_CODE	NUMBER,"
+                        "SCHEME_TYPE_DESC	VARCHAR,"
+                        "SCHEME_PARENT_ID	NUMBER,"
+                        "PARENT_DESCR	VARCHAR,"
+                        "SEVERITY_LEVEL	NUMBER,"
+                        "SOURCE	NUMBER,"
+                        "SOURCE_NAME	VARCHAR,"
+                        "MECHANICAL_GRADE	NUMBER,"
+                        "SIXT_TYPE	NUMBER,"
+                        "SIXT_CATEGORY	VARCHAR,"
+                        "FILE_NAME	VARCHAR,"
+                        "FILE_DATE	TIMESTAMP_NTZ,"
+                        "ROW_VERSION	NUMBER)",
+        "stg_query": "COPY INTO {database_name}.{schema_name}.METADATA_SCMS_TEMP "
+                     "FROM ("
+                     "SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,"
+                     "metadata$filename,"
+                     "TO_DATE(REGEXP_SUBSTR(metadata$filename,"
+                     "'([0-9\.]+)/([0-9\.]+)/([0-9\.]+)'),'YYYY/MM/DD'),"
+                     "row_number() over (partition by $1 order by metadata$filename desc) "
+                     "FROM @{database_name}.{schema_name}.METADATA_SCMS) "
+                     "FILE_FORMAT = S3_CSV",
+        "update_query": "create or replace table {database_name}.{schema_name}.METADATA_SCMS as "
+                        "SELECT SCHEME_ID, SCHEME_DESCR, SCHEME_TYPE_CODE, SCHEME_TYPE_DESC,"
+                        "SCHEME_PARENT_ID, PARENT_DESCR, SEVERITY_LEVEL, SOURCE, SOURCE_NAME,"
+                        "MECHANICAL_GRADE, SIXT_TYPE, SIXT_CATEGORY, FILE_NAME, FILE_DATE,"
+                        "YEAR(FILE_DATE)*10000+MONTH(FILE_DATE)*100+DAY(FILE_DATE) as FILE_DATE_INT "
+                        "FROM {database_name}.{schema_name}.METADATA_SCMS_TEMP "
+                        "WHERE ROW_VERSION = 1"
+     }, {
+        "name": "METADATA_VCLS",
+        "need_to_update": 1,
+        "create_query": "create or replace table {database_name}.{schema_name}.METADATA_VCLS_TEMP("
+                        "VEHICLE_ID	NUMBER,"
+                        "LICENSE_NMBR	VARCHAR,"
+                        "MANUFACTURER	VARCHAR,"
+                        "MODEL	VARCHAR,"
+                        "FILE_NAME	VARCHAR,"
+                        "FILE_DATE	TIMESTAMP_NTZ,"
+                        "ROW_VERSION	NUMBER)",
+        "stg_query": "COPY INTO {database_name}.{schema_name}.METADATA_VCLS_TEMP "
+                     "FROM ("
+                     "SELECT $1, $2, $3, $4,"
+                     "metadata$filename,"
+                     "TO_DATE(REGEXP_SUBSTR(metadata$filename,"
+                     "'([0-9\.]+)/([0-9\.]+)/([0-9\.]+)'),'YYYY/MM/DD'),"
+                     "row_number() over (partition by $1 order by metadata$filename desc) "
+                     "FROM @{database_name}.{schema_name}.METADATA_VCLS) "
+                     "FILE_FORMAT = S3_CSV",
+        "update_query": "create or replace table {database_name}.{schema_name}.METADATA_VCLS as "
+                        "SELECT VEHICLE_ID, LICENSE_NMBR, MANUFACTURER, MODEL, FILE_NAME, FILE_DATE,"
+                        "YEAR(FILE_DATE)*10000+MONTH(FILE_DATE)*100+DAY(FILE_DATE) as FILE_DATE_INT "
+                        "FROM {database_name}.{schema_name}.METADATA_VCLS_TEMP "
+                        "WHERE ROW_VERSION = 1"
+    }
+]
+
+
